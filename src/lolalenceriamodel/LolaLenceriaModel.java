@@ -2,6 +2,7 @@ package lolalenceriamodel;
 
 import model.*;
 import daos.*;
+import java.util.Date;
 
 public class LolaLenceriaModel 
 {
@@ -29,7 +30,7 @@ public class LolaLenceriaModel
        
         
         System.out.println("Detalle Ingreso:");
-        for(DetalleIngreso  di : daos.DetalleIngresoDAO.findAll())
+        for(DetalleIngreso  di : daos.DetallesIngresoDAO.findAll())
         {
             System.out.println(di);
         }
@@ -42,9 +43,18 @@ public class LolaLenceriaModel
         }
         System.out.println("");
         
+        System.out.println(daos.IngresosDAO.buscarDetalles(daos.IngresosDAO.getOne(4)).size());
+        for(DetalleIngreso dtDetalleIngreso : daos.IngresosDAO.buscarDetalles(daos.IngresosDAO.getOne(4)))
+        {
+            System.out.println(dtDetalleIngreso);
+        }
         
-        DetalleIngreso det = new DetalleIngreso(daos.IngresosDAO.getOne(1), daos.ProductosDAO.getOne(38), 20, 200);
-        daos.DetalleIngresoDAO.save(det);
+        System.out.println("GASTO:" +  daos.IngresosDAO.getOne(4).calcularGasto()  );
+        /*Ingreso ingreso = new Ingreso(new Date(), daos.VendedoresDAO.getOne(1));*/
+                
+        
+       /* DetalleIngreso det = new DetalleIngreso(daos.IngresosDAO.getOne(4), daos.ProductosDAO.getOne(39), 20, 200);
+        daos.DetallesIngresoDAO.save(det);*/
     }
     
 }

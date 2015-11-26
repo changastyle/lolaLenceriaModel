@@ -1,5 +1,8 @@
 package daos;
 
+import java.util.ArrayList;
+import model.DetalleIngreso;
+import model.Ingreso;
 import model.Producto;
 
 public class IngresosDAO 
@@ -78,5 +81,20 @@ public class IngresosDAO
         //Inserto Todos en DB:
         respuesta = daos.AbstractDAO.updateAll(arrDeProductosActualizados);
         return respuesta;
+    }
+    public static  ArrayList<DetalleIngreso> buscarDetalles( Ingreso ingreso)
+    {
+        ArrayList<DetalleIngreso> arr = new ArrayList<DetalleIngreso>();
+        
+        for(DetalleIngreso detalleIngreso : daos.DetallesIngresoDAO.findAll())
+        {
+            if(detalleIngreso.getIngreso().getId() == ingreso.getId())
+            {
+                arr.add(detalleIngreso);
+            }
+        }
+        
+        
+        return arr;
     }
 }

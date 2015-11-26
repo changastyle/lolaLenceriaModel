@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Fetch;
 
 
 @Entity
@@ -27,6 +29,7 @@ public class Ingreso
     @JoinColumn(name="fkVendedor")
     private Vendedor vendedor;
     /*@OneToMany(cascade = CascadeType.ALL, mappedBy = "ingreso" ,fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     List<DetalleIngreso> detalles;*/
 
     public Ingreso() 
@@ -36,11 +39,11 @@ public class Ingreso
         //his.detalles = new ArrayList<DetalleIngreso>();
     }
 
-    public Ingreso(Date timestamp, Vendedor vendedor)
+    public Ingreso(Date timestamp, Vendedor vendedor /*, ArrayList<DetalleIngreso> detalles*/)
     {
         this.timestamp = timestamp;
         this.vendedor = vendedor;
-        //his.detalles = new ArrayList<DetalleIngreso>();
+        //this.detalles = detalles;
     }
 
 
@@ -77,7 +80,7 @@ public class Ingreso
 
     public void setDetalles(List<DetalleIngreso> detalles) {
         this.detalles = detalles;
-    }*/
+    }
     //</editor-fold>
     
     //METODOS MUY IMPORTANTES:
@@ -89,7 +92,16 @@ public class Ingreso
     {
         this.detalles.remove(detalle);
     }*/
-    
+
+    public double calcularGasto()
+    {
+        double gasto = 0 ;
+        for(DetalleIngreso detalleIngreso : daos.IngresosDAO.buscarDetalles(this))
+        {
+            gasto += detalleIngreso.getPrecioAlMomentoDeIngreso();
+        }
+        return gasto;
+    }
     @Override
     public String toString() 
     {

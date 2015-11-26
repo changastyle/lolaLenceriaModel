@@ -1,21 +1,25 @@
 package daos;
 
+import java.util.ArrayList;
+import model.DetalleIngreso;
+import model.Ingreso;
 import model.Producto;
 
-public class DetalleIngresoDAO 
+public class DetallesVentaDAO 
 {
-    public static java.util.ArrayList<model.DetalleIngreso> findAll()
+    public static java.util.ArrayList<model.DetalleVenta> findAll()
     {
-        java.util.ArrayList<model.DetalleIngreso> arr = new java.util.ArrayList<model.DetalleIngreso>();
+        java.util.ArrayList<model.DetalleVenta> arr = new java.util.ArrayList<model.DetalleVenta>();
         
-        for(Object o : daos.AbstractDAO.findAll(model.DetalleIngreso.class))
+        for(Object o : daos.AbstractDAO.findAll(model.DetalleVenta.class))
         {
-            arr.add((model.DetalleIngreso) o);
+            arr.add((model.DetalleVenta) o);
         }
+        
         
         return arr;
     }
-    public static boolean save(model.DetalleIngreso obj)
+    public static boolean save(model.DetalleVenta obj)
     {
         return daos.AbstractDAO.saveOneNew(obj);
     }
@@ -24,7 +28,7 @@ public class DetalleIngresoDAO
         boolean respuesta = false;
         model.Producto p = null;
         
-        for(model.DetalleIngreso aux : findAll())
+        for(model.DetalleVenta aux : findAll())
         {
             if(id == aux.getId())
             {
@@ -33,28 +37,28 @@ public class DetalleIngresoDAO
         }
         return respuesta;     
     }
-    public static model.DetalleIngreso getOne(int id)
+    public static model.DetalleVenta getOne(int id)
     {
-       return (model.DetalleIngreso) daos.AbstractDAO.get(model.DetalleIngreso.class, id);
+       return (model.DetalleVenta) daos.AbstractDAO.get(model.DetalleVenta.class, id);
     }
-    public static boolean updateOne(int id, model.DetalleIngreso nuevo)
+    public static boolean updateOne(int id, model.DetalleVenta nuevo)
     {
         boolean respuesta = false;
         
-        model.DetalleIngreso viejo = getOne(id);
+        model.DetalleVenta viejo = getOne(id);
         
         //Reemplazo valores:
-        viejo.setCantidad(nuevo.getCantidad());
-        viejo.setIngreso(nuevo.getIngreso());
-        viejo.setPrecioAlMomentoDeIngreso(nuevo.getPrecioAlMomentoDeIngreso());
+        viejo.setVenta(nuevo.getVenta());
+        viejo.setPrecioUnitario(nuevo.getPrecioUnitario());
         viejo.setProducto(nuevo.getProducto());
+        viejo.setCantidad(nuevo.getCantidad());
         
         //Inserto en DB:
         respuesta = daos.AbstractDAO.updateOne(viejo);
         
         return respuesta;
     }
-    public static boolean updateMany(String[] ids, model.DetalleIngreso nuevo)
+    public static boolean updateMany(String[] ids, model.DetalleVenta nuevo)
     {
         boolean respuesta = false;
         
@@ -63,13 +67,13 @@ public class DetalleIngresoDAO
         
         for(String id : ids)
         {
-            model.DetalleIngreso viejo = getOne(Integer.parseInt(id));
+            model.DetalleVenta viejo = getOne(Integer.parseInt(id));
         
             //Reemplazo valores:
-            viejo.setCantidad(nuevo.getCantidad());
-            viejo.setIngreso(nuevo.getIngreso());
-            viejo.setPrecioAlMomentoDeIngreso(nuevo.getPrecioAlMomentoDeIngreso());
+            viejo.setVenta(nuevo.getVenta());
+            viejo.setPrecioUnitario(nuevo.getPrecioUnitario());
             viejo.setProducto(nuevo.getProducto());
+            viejo.setCantidad(nuevo.getCantidad());
 
             //Agrego el producto actualizado al array de productos actualizados:
             arrDeProductosActualizados.add(viejo);

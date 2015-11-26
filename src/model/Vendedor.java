@@ -10,18 +10,26 @@ public class Vendedor
     private int id;
     private String nombre;
     private String apellido;
+    private String password;
+    private String email;
 
     public Vendedor()
     {
         this.nombre = "";
         this.apellido = "";
+        this.email = "";
+        this.password = "";
     }
 
-    public Vendedor(String nombre, String apellido) 
-    {
+    public Vendedor(int id, String nombre, String apellido, String password, String email) {
+        this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
+        this.password = password;
+        this.email = email;
     }
+
+    
     
     //<editor-fold desc="GYS">
     public int getId() {
@@ -47,13 +55,31 @@ public class Vendedor
     public void setApellido(String apellido) {
         this.apellido = apellido;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
     //</editor-fold>
 
     @Override
-    public String toString() 
-    {
-        return "Vendedor{" + "id=" + id + ", nombre=" + nombre + ", apellido=" + apellido + '}';
+    public String toString() {
+        return "Vendedor{" + "id=" + id + ", nombre=" + nombre + ", apellido=" + apellido + ", password=" + password + ", email=" + email + '}';
     }
+
+    
     
     
     
