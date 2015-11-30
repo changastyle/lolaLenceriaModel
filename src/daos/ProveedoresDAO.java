@@ -1,5 +1,9 @@
 package daos;
 
+import java.util.ArrayList;
+import model.Producto;
+import model.Proveedor;
+
 public class ProveedoresDAO 
 {
     public static java.util.ArrayList<model.Proveedor> findAll()
@@ -17,7 +21,7 @@ public class ProveedoresDAO
     {
         return daos.AbstractDAO.saveOneNew(aux);
     }
-    public static boolean remove(int id)
+    private static boolean remove(int id)
     {
         boolean respuesta = false;
         model.Producto p = null;
@@ -26,10 +30,39 @@ public class ProveedoresDAO
         {
             if(id == marca.getId())
             {
-                respuesta = daos.AbstractDAO.deleteOne(marca);
+                respuesta = remove(marca);
             }
         }
         return respuesta;     
+    }
+    private static boolean remove(model.Proveedor obj)
+    {
+        boolean respuesta = false;
+                
+        respuesta = daos.AbstractDAO.deleteOne(obj);
+
+        return respuesta;     
+    }
+    public static boolean removeWithoutFuckingTheModel(model.Proveedor obtToDelete, model.Proveedor nuevoEncargado)
+    {
+        boolean respuesta = false;
+        if(!remove(obtToDelete))
+        {
+            //System.out.println("ASOCIADOS:");
+            for(Producto socio : asociados(obtToDelete))
+            {
+                //System.out.println(" -> "+ socio);
+                socio.setMarca(nuevoEncargado);
+                daos.ProductosDAO.updateOne(socio.getId(), socio);
+            }
+            
+            respuesta = daos.ProveedoresDAO.remove(obtToDelete);
+        }
+        else
+        {
+            System.out.println("REMOVE PROVEEDOR:");
+        }
+        return respuesta;  
     }
     public static model.Proveedor getOne(int id)
     {
@@ -77,5 +110,18 @@ public class ProveedoresDAO
         //Inserto Todos en DB:
         respuesta = daos.AbstractDAO.updateAll(arrDeProductosActualizados);*/
         return respuesta;
+    }
+    public static ArrayList<Producto> asociados(Proveedor proveedor)
+    {
+        ArrayList<Producto> asociados = new ArrayList<Producto> ();
+        
+        for(Producto producto : daos.ProductosDAO.findAll())
+        {
+            if(producto.getMarca().getId() == proveedor.getId())
+            {
+                asociados.add(producto);
+            }
+        } 
+        return asociados;
     }
 }

@@ -8,11 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Fetch;
 
@@ -28,6 +24,8 @@ public class Ingreso
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="fkVendedor")
     private Vendedor vendedor;
+    @OneToMany(cascade = CascadeType.ALL , mappedBy = "ingreso" , fetch = FetchType.EAGER)
+    List<DetalleIngreso> detalles;
     /*@OneToMany(cascade = CascadeType.ALL, mappedBy = "ingreso" ,fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     List<DetalleIngreso> detalles;*/
@@ -36,14 +34,14 @@ public class Ingreso
     {
         this.timestamp = new Date(0);
         this.vendedor = null;
-        //his.detalles = new ArrayList<DetalleIngreso>();
+        this.detalles = new ArrayList<DetalleIngreso>();
     }
 
-    public Ingreso(Date timestamp, Vendedor vendedor /*, ArrayList<DetalleIngreso> detalles*/)
+    public Ingreso(Date timestamp, Vendedor vendedor )
     {
         this.timestamp = timestamp;
         this.vendedor = vendedor;
-        //this.detalles = detalles;
+        this.detalles = new ArrayList<DetalleIngreso>();
     }
 
 
@@ -74,7 +72,8 @@ public class Ingreso
         this.vendedor = vendedor;
     }
 
-   /* public List<DetalleIngreso> getDetalles() {
+    public List<DetalleIngreso> getDetalles() 
+    {
         return detalles;
     }
 
@@ -84,14 +83,14 @@ public class Ingreso
     //</editor-fold>
     
     //METODOS MUY IMPORTANTES:
-    /*public void agregarDetalle(DetalleIngreso detalle)
+    public void agregarDetalle(DetalleIngreso detalle)
     {
         this.detalles.add(detalle);
     }
     public void removeDetalle(DetalleIngreso detalle)
     {
         this.detalles.remove(detalle);
-    }*/
+    }
 
     public double calcularGasto()
     {
@@ -102,11 +101,32 @@ public class Ingreso
         }
         return gasto;
     }
+    public String imprimirDetalles()
+    {
+        String salida = "   {\n";
+        
+        for(DetalleIngreso dtIngreso : this.detalles)
+        {
+            salida += "     " + dtIngreso + "\n";
+        }
+        salida += "   }\n";
+        
+        return salida;
+    }
     @Override
     public String toString() 
     {
-        return "Ingreso{" + "id=" + id + ", timestamp=" + timestamp + ", vendedor=" + vendedor + '}';
+        String toString =  "Ingreso\n";
+        toString += "{\n";
+        toString += "   id = " + id + "\n";
+        toString += "   timestamp = " + timestamp + "\n";
+        toString += "   vendedor = " + vendedor + "\n";
+        toString += "   detalles:\n" + imprimirDetalles() + "";
+        toString += "}";
+        return  toString;
+        
     }
+    
 
     
     

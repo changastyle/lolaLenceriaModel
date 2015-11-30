@@ -1,9 +1,28 @@
 package daos;
 
+import java.util.ArrayList;
+import model.DetalleIngreso;
 import model.Producto;
+import model.Proveedor;
 
 public class ProductosDAO 
 {
+    public static model.Producto getOne(int id)
+    {
+       return (model.Producto) daos.AbstractDAO.get(model.Producto.class, id);
+    }
+    public static model.Producto getOneByNumeroDeSerie(int numeroDeSerie)
+    {
+       model.Producto respuesta = null;
+       for(Producto producto : findAll())
+       {
+           if(producto.getNumeroSerie() == numeroDeSerie)
+           {
+               respuesta = producto;
+           }
+       }
+       return respuesta;
+    }
     public static java.util.ArrayList<model.Producto> findAll()
     {
         java.util.ArrayList<model.Producto> arr = new java.util.ArrayList<model.Producto>();
@@ -13,8 +32,7 @@ public class ProductosDAO
             model.Producto aux = (model.Producto) o;
             arr.add(aux);
         }
-        
-        
+       
         return arr;
     }
     public static boolean save(model.Producto producto)
@@ -35,45 +53,81 @@ public class ProductosDAO
         }
         return respuesta;     
     }
-    public static model.Producto getOne(int id)
+    private static boolean remove(Producto obj)
     {
-       return (model.Producto) daos.AbstractDAO.get(model.Producto.class, id);
+        boolean respuesta = false;
+        model.Producto p = null;
+        
+        respuesta = daos.AbstractDAO.deleteOne(obj);
+
+        return respuesta;     
     }
-    public static boolean updateOne(int id, model.Producto productoNuevo)
+    public static ArrayList<DetalleIngreso> asociados(Producto obj)
+    {
+        ArrayList<DetalleIngreso> asociados = new ArrayList<DetalleIngreso>();
+        
+        for(DetalleIngreso aux : daos.DetallesIngresoDAO.findAll())
+        {
+            if(aux.getProducto().getId() == obj.getId())
+            {
+                asociados.add(aux);
+            }
+        } 
+        return asociados;
+    }
+    public static boolean removeWithoutFuckingTheModel(model.Producto obtToDelete, model.Producto nuevoEncargado)
+    {
+        boolean respuesta = remove(obtToDelete);
+        if(!respuesta)
+        {
+            //System.out.println("ASOCIADOS:");
+            for( DetalleIngreso socio : asociados(obtToDelete))
+            {
+                //System.out.println(" -> "+ socio);
+                socio.setProducto(nuevoEncargado);
+                daos.DetallesIngresoDAO.updateOne(socio.getId(), socio);
+            }
+            
+            respuesta = remove(obtToDelete);
+        }
+        return respuesta;  
+    }
+    public static boolean updateOne(int id, model.Producto nuevo)
     {
         boolean respuesta = false;
         
-        model.Producto productoEnDB = getOne(id);
+        model.Producto viejo = getOne(id);
         
         //Reemplazo valores:
-        productoEnDB.setNombreProducto(productoNuevo.getNombreProducto());
-        productoEnDB.setNumeroSerie(productoNuevo.getNumeroSerie());
-        //productoEnDB.setMarca(productoNuevo.getMarca());
+        viejo.setNombreProducto(nuevo.getNombreProducto());
+        viejo.setNumeroSerie(nuevo.getNumeroSerie());
+        viejo.setMarca(nuevo.getMarca());
         
         
         //Inserto en DB:
-        respuesta = daos.AbstractDAO.updateOne(productoEnDB);
+        respuesta = daos.AbstractDAO.updateOne(viejo);
         
         return respuesta;
     }
-    public static boolean updateMany(String[] ids, model.Producto productoActualizado)
+    public static boolean updateMany(int[] ids, model.Producto nuevo)
     {
         boolean respuesta = false;
         
         //Creo un array donde meter los productos actualizados:
         java.util.ArrayList<Object> arrDeProductosActualizados = new java.util.ArrayList<Object>();
         
-        for(String id : ids)
+        for(int id : ids)
         {
-            model.Producto productoEnDB = getOne(Integer.parseInt(id));
+            model.Producto viejo = getOne(id);
         
             //Reemplazo valores:
-            productoEnDB.setNombreProducto(productoActualizado.getNombreProducto());
-            //productoEnDB.setNumeroSerie(productoActualizado.getNumeroSerie());
-            //productoEnDB.setMarca(productoEnDB.getMarca());
+            viejo.setNombreProducto(nuevo.getNombreProducto());
+            viejo.setNombreProducto(nuevo.getNombreProducto());
+            //viejo.setNumeroSerie(nuevo.getNumeroSerie());
+            viejo.setMarca(nuevo.getMarca());
 
             //Agrego el producto actualizado al array de productos actualizados:
-            arrDeProductosActualizados.add(productoEnDB);
+            arrDeProductosActualizados.add(viejo);
             
         }
         //Inserto Todos en DB:

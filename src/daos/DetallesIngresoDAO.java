@@ -21,7 +21,7 @@ public class DetallesIngresoDAO
     {
         return daos.AbstractDAO.saveOneNew(obj);
     }
-    public static boolean remove(int id)
+    private static boolean remove(int id)
     {
         boolean respuesta = false;
         
@@ -29,10 +29,14 @@ public class DetallesIngresoDAO
         {
             if(id == aux.getId())
             {
-                respuesta = daos.AbstractDAO.deleteOne(aux);
+                respuesta = remove(aux);
             }
         }
         return respuesta;     
+    }
+    public static boolean remove(model.DetalleIngreso obj)
+    {
+        return daos.AbstractDAO.deleteOne(obj);
     }
     public static model.DetalleIngreso getOne(int id)
     {

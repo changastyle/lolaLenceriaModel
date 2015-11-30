@@ -6,7 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -16,6 +16,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 @Entity
 @Table(name="productos")
@@ -26,11 +28,13 @@ public class Producto
     @Expose
     private int id;
     @Expose
+    @Column( name="numeroSerie" , unique=true)
     private int numeroSerie;
     @Expose
     private String nombreProducto;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="fkMarca")
+    @ManyToOne()
+    @Cascade({CascadeType.SAVE_UPDATE,CascadeType.MERGE})
+    @JoinColumn(name="fkProveedor")
     private Proveedor marcaAsociada;
    
 
@@ -38,13 +42,14 @@ public class Producto
     {
         this.numeroSerie = -1;
         this.nombreProducto = "";
+        this.marcaAsociada = null;
     }
 
-    public Producto(int id, int numeroSerie, String nombreProducto) 
+    public Producto(int numeroSerie, String nombreProducto, Proveedor marcaAsociada) 
     {
-        this.id = id;
         this.numeroSerie = numeroSerie;
         this.nombreProducto = nombreProducto;
+        this.marcaAsociada = marcaAsociada;
     }
     
     

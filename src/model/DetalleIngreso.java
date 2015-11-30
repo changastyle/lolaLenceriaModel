@@ -1,6 +1,15 @@
 package model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 @Entity
 @Table(name="detalleingreso")
@@ -9,10 +18,12 @@ public class DetalleIngreso
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
+    @Cascade({CascadeType.SAVE_UPDATE})
     @JoinColumn(name="fkIngreso")
     private Ingreso ingreso;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne()
+    @Cascade({CascadeType.SAVE_UPDATE})
     @JoinColumn(name="fkProducto")
     private Producto producto;
     private int cantidad;
@@ -26,7 +37,6 @@ public class DetalleIngreso
         this.precioAlMomentoDeIngreso = 0;
         this.ingreso = null;
     }
-
     public DetalleIngreso(Ingreso ingreso, Producto producto, int cantidad, double precioAlMomentoDeIngreso) 
     {
         this.ingreso = ingreso;
@@ -87,7 +97,7 @@ public class DetalleIngreso
         s+= "'cantidad': " + cantidad + ",";
         s+= "'precioAlMomentoDeIngreso' :'" + precioAlMomentoDeIngreso + ",";
         s+= "'producto': " + producto.getId()+" | "+producto.getNombreProducto()  + ",";
-        s+= "'ingreso' : " +  ingreso + "";
+        //s+= "'ingreso' : " +  ingreso + "";
         s+= "}";
         
         return s;

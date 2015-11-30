@@ -37,11 +37,6 @@ public class Proveedor
     private String web;
     @Expose
     private String direccionFisica;
-    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "marca" ,fetch = FetchType.EAGER)
-    
-    //@Fetch(value = FetchMode.SUBSELECT)
-    
-    //List<model.Producto> arrProductos;
     
     public Proveedor() 
     {
@@ -51,18 +46,23 @@ public class Proveedor
         this.email = "";
         this.direccionFisica = "";
         this.web = "";
-        //this.arrProductos = new ArrayList<model.Producto>();
+    }
+    public Proveedor(String nombre, String email, String web, String direccionFisica) {
+        this.nombre = nombre;
+        this.telefono1 = "";
+        this.telefono2 = "";
+        this.email = email;
+        this.web = web;
+        this.direccionFisica = direccionFisica;
     }
 
-    public Proveedor(int id, String nombre, String telefono1, String telefono2, String email, String web, String direccionFisica/*, List<Producto> arrProductos*/) {
-        this.id = id;
+    public Proveedor(String nombre, String telefono1, String telefono2, String email, String web, String direccionFisica/*, List<Producto> arrProductos*/) {
         this.nombre = nombre;
         this.telefono1 = telefono1;
         this.telefono2 = telefono2;
         this.email = email;
         this.web = web;
         this.direccionFisica = direccionFisica;
-        //this.arrProductos = arrProductos;
     }
 
     
@@ -122,15 +122,7 @@ public class Proveedor
     public void setDireccionFisica(String direccionFisica) {
         this.direccionFisica = direccionFisica;
     }
-
-    /*public List<Producto> getArrProductos() {
-        return arrProductos;
-    }
-
-    public void setArrProductos(List<Producto> arrProductos) {
-        this.arrProductos = arrProductos;
-    }*/
-
+    
     @Override
     public String toString() 
     {
@@ -144,8 +136,4 @@ public class Proveedor
         
         return JSON;
     }
-    
-    
-    
-    
 }

@@ -206,7 +206,7 @@ public class AbstractDAO
             {
                 transaction.rollback();                                // System.out.println("AbstractDAO.deleteOne(" + object + ") -> rollback");
             }
-            e.printStackTrace();
+            //e.printStackTrace();
             System.out.println("ERROR: AbstractDAO.deleteOne(" + object +") -> "+ e);
         }
 

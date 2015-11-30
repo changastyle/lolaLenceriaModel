@@ -13,8 +13,10 @@ public class IngresosDAO
         
         for(Object o : daos.AbstractDAO.findAll(model.Ingreso.class))
         {
-            model.Ingreso aux = (model.Ingreso) o;
-            arr.add(aux);
+            if(arr.indexOf(o) != 0)
+            {
+              arr.add((model.Ingreso) o);  
+            }
         }
         
         
